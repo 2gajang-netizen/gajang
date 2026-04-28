@@ -788,10 +788,16 @@ function sendSMS(orderId, type){
     secretKey:  alimSettings.userId,
     serviceId:  alimSettings.serviceId,
     sender:     alimSettings.senderNum.replace(/[^0-9]/g,''),
-    receiver:   phone.replace(/[^0-9]/g,''),    msg:        msg
+    receiver:   phone,
+    msg:        msg
   };
 
-  fetch(scriptUrl, { method:'POST', body:JSON.stringify(payload), redirect:'follow' })
+  fetch(scriptUrl, {
+    method: 'POST',
+    headers: { 'Content-Type': 'text/plain;charset=UTF-8' },
+    body: JSON.stringify(payload),
+    redirect: 'follow'
+  })
   .then(function(r){
     var ct = r.headers.get('content-type')||'';
     if(ct.indexOf('json')!==-1) return r.json();
