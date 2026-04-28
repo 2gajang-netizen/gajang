@@ -707,6 +707,7 @@ function openAlimModal(){
   document.getElementById('alimEnabled').checked  = !!alimSettings.enabled;
   document.getElementById('alimApiKey').value     = alimSettings.apiKey||'';
   document.getElementById('alimUserId').value     = alimSettings.userId||'';
+  document.getElementById('alimServiceId').value  = alimSettings.serviceId||'';
   document.getElementById('alimSenderNum').value  = alimSettings.senderNum||'';
   document.getElementById('alimConfirmMsg').value = alimSettings.confirmMsg||'';
   document.getElementById('alimReadyMsg').value   = alimSettings.readyMsg||'';
@@ -719,6 +720,7 @@ function saveAlimModal(){
   alimSettings.enabled    = document.getElementById('alimEnabled').checked;
   alimSettings.apiKey     = document.getElementById('alimApiKey').value.trim();
   alimSettings.userId     = document.getElementById('alimUserId').value.trim();
+  alimSettings.serviceId  = document.getElementById('alimServiceId').value.trim();
   alimSettings.senderNum  = document.getElementById('alimSenderNum').value.trim();
   alimSettings.confirmMsg = document.getElementById('alimConfirmMsg').value;
   alimSettings.readyMsg   = document.getElementById('alimReadyMsg').value;
@@ -748,10 +750,13 @@ function sendSMS(orderId, type){
   if(!o) return;
   if(!alimSettings.enabled) return;
   if(!alimSettings.apiKey){
-    toast('📱 문자설정 → API Key를 입력하세요'); openAlimModal(); return;
+    toast('📱 문자설정 → Access Key를 입력하세요'); openAlimModal(); return;
   }
   if(!alimSettings.userId){
-    toast('📱 문자설정 → 알리고 아이디를 입력하세요'); openAlimModal(); return;
+    toast('📱 문자설정 → Secret Key를 입력하세요'); openAlimModal(); return;
+  }
+  if(!alimSettings.serviceId){
+    toast('📱 문자설정 → Service ID를 입력하세요'); openAlimModal(); return;
   }
   if(!alimSettings.senderNum){
     toast('📱 문자설정 → 발신번호를 입력하세요'); openAlimModal(); return;
@@ -775,14 +780,13 @@ function sendSMS(orderId, type){
   }
 
   var payload = {
-    action:   'sms',
-    apiKey:   alimSettings.apiKey,
-    userId:   alimSettings.userId,
-    sender:   alimSettings.senderNum.replace(/[^0-9]/g,''),
-    receiver: phone,
-    msg:      msg,
-    msgType:  msg.length > 90 ? 'LMS' : 'SMS',
-    title:    msg.length > 90 ? '[가장정육점] '+typeLabel : ''
+    action:     'sms',
+    accessKey:  alimSettings.apiKey,
+    secretKey:  alimSettings.userId,
+    serviceId:  alimSettings.serviceId,
+    sender:     alimSettings.senderNum.replace(/[^0-9]/g,''),
+    receiver:   phone,
+    msg:        msg
   };
 
   fetch(scriptUrl, { method:'POST', body:JSON.stringify(payload) })
