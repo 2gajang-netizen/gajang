@@ -792,8 +792,14 @@ function sendSMS(orderId, type){
     msg:        msg
   };
 
-  fetch(scriptUrl, { method:'POST', body:JSON.stringify(payload) })
-  .then(function(r){ return r.json(); })
+  fetch(scriptUrl, { method:'POST', body:JSON.stringify(payload), redirect:'follow' })
+  .then(function(r){
+    var ct = r.headers.get('content-type')||'';
+    if(ct.indexOf('json')!==-1) return r.json();
+    return r.text().then(function(t){
+      try{ return JSON.parse(t); }catch(e){ return {success:false,message:t||'응답 파싱 오류'}; }
+    });
+  })
   .then(function(d){
     if(d.success){
       if(!localSt[orderId]) localSt[orderId]={};
