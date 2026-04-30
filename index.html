@@ -594,55 +594,45 @@ G: 주문확인   H: 준비완료  I: 수령완료</div></div></div></div>
 <div class="alim-ov" id="alimOv">
   <div class="alim-modal">
     <div class="alim-title">
-      <span>📱 네이버 SENS 문자 설정</span>
+      <span>💬 카카오 알림톡 설정</span>
       <button class="modal-close" id="btnAlimClose">✕</button>
     </div>
 
     <!-- 사용 여부 토글 -->
     <div class="alim-section">
       <div class="alim-toggle-row">
-        <div class="alim-toggle-label">문자 자동발송 사용</div>
+        <div class="alim-toggle-label">알림톡 자동발송 사용</div>
         <label class="alim-toggle">
           <input type="checkbox" id="alimEnabled">
           <span class="alim-slider"></span>
         </label>
       </div>
-      <div class="alim-hint">ON 시 주문확인·준비완료 버튼 누르면 고객에게 자동으로 문자가 발송됩니다</div>
+      <div class="alim-hint">ON 시 주문확인·준비완료 버튼 누르면 고객에게 카카오 알림톡이 발송됩니다</div>
     </div>
 
-    <!-- API 설정 -->
+
+
+    <!-- 템플릿 정보 -->
     <div class="alim-section">
-      <div class="alim-section-title">🔑 네이버 클라우드 API 설정</div>
-      <div class="fg"><label class="fl">API Key</label>
-        <input type="password" class="alim-api-inp" id="alimApiKey" placeholder="알리고 API Key 입력" style="width:100%">
-      </div>
-      <div class="fg" style="margin-top:7px"><label class="fl">Secret Key</label>
-        <input type="text" class="alim-api-inp" id="alimUserId" placeholder="알리고 로그인 아이디" style="width:100%">
-      </div>
-      <div class="fg" style="margin-top:7px"><label class="fl">Service ID</label>
-        <input type="text" class="alim-api-inp" id="alimServiceId" placeholder="ncp:sms:kr:369919624387:gajang" style="width:100%">
-      </div>
-      <div class="fg" style="margin-top:7px"><label class="fl">발신 전화번호 (가게번호)</label>
-        <input type="text" class="alim-api-inp" id="alimSenderNum" placeholder="01046381211" style="width:100%">
-      </div>
-      <div class="alim-hint" style="margin-top:8px;background:#F0FAF0;padding:8px;border-radius:6px;border:1px solid #A8D5A0">
-        ✅ 네이버 클라우드 → 보안관리 → API 인증키에서<br>
-        Access Key / Secret Key 확인 후 입력하세요
+      <div class="alim-section-title">✅ 주문확인 알림톡</div>
+      <div class="alim-hint" style="background:#F0FAF0;padding:10px;border-radius:6px;border:1px solid #A8D5A0;font-size:13px;line-height:1.6">
+        [가장정육점] #{이름} 고객님<br>
+        주문이 확인되었습니다 ✅<br>
+        📅 픽업: #{픽업날짜} #{픽업시간}<br>
+        🥩 주문: #{주문내역}<br>
+        준비 완료되면 다시 안내드릴게요 😊
       </div>
     </div>
 
-    <!-- 주문확인 문자 내용 -->
     <div class="alim-section">
-      <div class="alim-section-title">✅ 주문확인 문자 내용</div>
-      <textarea class="alim-textarea" id="alimConfirmMsg" rows="5"></textarea>
-      <div class="alim-hint">사용 가능한 변수: <b>{이름}</b> · <b>{픽업날짜}</b> · <b>{픽업시간}</b> · <b>{주문내역}</b></div>
-    </div>
-
-    <!-- 준비완료 문자 내용 -->
-    <div class="alim-section">
-      <div class="alim-section-title">🥩 준비완료 문자 내용</div>
-      <textarea class="alim-textarea" id="alimReadyMsg" rows="5"></textarea>
-      <div class="alim-hint">사용 가능한 변수: <b>{이름}</b> · <b>{픽업날짜}</b> · <b>{픽업시간}</b> · <b>{주문내역}</b></div>
+      <div class="alim-section-title">🥩 준비완료 알림톡</div>
+      <div class="alim-hint" style="background:#F0FAF0;padding:10px;border-radius:6px;border:1px solid #A8D5A0;font-size:13px;line-height:1.6">
+        [가장정육점] #{이름} 고객님<br>
+        주문하신 상품이 준비되었습니다 🥩✨<br>
+        📅 픽업: #{픽업날짜} #{픽업시간}<br>
+        🥩 주문: #{주문내역}<br>
+        지금 바로 픽업 가능합니다! 감사합니다 🙏
+      </div>
     </div>
 
     <button class="alim-save-btn" id="btnAlimSave">💾 설정 저장</button>
@@ -696,8 +686,7 @@ var alimSettings = (function(){
   try { return JSON.parse(localStorage.getItem('alim1988')||'{}'); } catch(e){ return {}; }
 })();
 if(alimSettings.enabled===undefined) alimSettings.enabled = false;
-if(!alimSettings.confirmMsg) alimSettings.confirmMsg = '[가장정육점] {이름} 고객님\n\n주문이 확인되었습니다 ✅\n\n📅 픽업: {픽업날짜} {픽업시간}\n🥩 주문: {주문내역}\n\n준비 완료되면 다시 안내드리겠습니다. 감사합니다!';
-if(!alimSettings.readyMsg)   alimSettings.readyMsg   = '[가장정육점] {이름} 고객님\n\n주문하신 상품이 준비되었습니다 🥩\n\n📅 픽업: {픽업날짜} {픽업시간}\n🥩 주문: {주문내역}\n\n매장에서 기다리고 있겠습니다. 감사합니다!';
+
 
 function saveAlimSettings(){
   localStorage.setItem('alim1988', JSON.stringify(alimSettings));
@@ -708,12 +697,7 @@ function saveAlimSettings(){
 // ══════════════════════════════════════════════
 function openAlimModal(){
   document.getElementById('alimEnabled').checked  = !!alimSettings.enabled;
-  document.getElementById('alimApiKey').value     = alimSettings.apiKey||'';
-  document.getElementById('alimUserId').value     = alimSettings.userId||'';
-  document.getElementById('alimServiceId').value  = alimSettings.serviceId||'';
-  document.getElementById('alimSenderNum').value  = alimSettings.senderNum||'';
-  document.getElementById('alimConfirmMsg').value = alimSettings.confirmMsg||'';
-  document.getElementById('alimReadyMsg').value   = alimSettings.readyMsg||'';
+
   document.getElementById('alimOv').classList.add('open');
 }
 function closeAlimModal(){
@@ -721,12 +705,7 @@ function closeAlimModal(){
 }
 function saveAlimModal(){
   alimSettings.enabled    = document.getElementById('alimEnabled').checked;
-  alimSettings.apiKey     = document.getElementById('alimApiKey').value.trim();
-  alimSettings.userId     = document.getElementById('alimUserId').value.trim();
-  alimSettings.serviceId  = document.getElementById('alimServiceId').value.trim();
-  alimSettings.senderNum  = document.getElementById('alimSenderNum').value.trim();
-  alimSettings.confirmMsg = document.getElementById('alimConfirmMsg').value;
-  alimSettings.readyMsg   = document.getElementById('alimReadyMsg').value;
+
   saveAlimSettings();
   closeAlimModal();
   renderAll();
@@ -746,50 +725,34 @@ function buildAlimMsg(template, o){
 }
 
 // ══════════════════════════════════════════════
-//  알림톡 전송 (알리고 API)
+//  알림톡 전송 (솔라피)
 // ══════════════════════════════════════════════
 function sendSMS(orderId, type){
   var o=orders.find(function(x){ return String(x.id)===String(orderId); });
   if(!o) return;
   if(!alimSettings.enabled) return;
-  if(!alimSettings.apiKey){
-    toast('📱 문자설정 → Access Key를 입력하세요'); openAlimModal(); return;
-  }
-  if(!alimSettings.userId){
-    toast('📱 문자설정 → Secret Key를 입력하세요'); openAlimModal(); return;
-  }
-  if(!alimSettings.serviceId){
-    toast('📱 문자설정 → Service ID를 입력하세요'); openAlimModal(); return;
-  }
-  if(!alimSettings.senderNum){
-    toast('📱 문자설정 → 발신번호를 입력하세요'); openAlimModal(); return;
-  }
+
   var phone = o.member.replace(/[^0-9]/g,'');
   if(phone.length < 10){ toast('전화번호 오류: '+o.member); return; }
 
-  var template = type==='confirm' ? alimSettings.confirmMsg : alimSettings.readyMsg;
   var name2 = (o.name||'고객').trim();
-  var msg = template
-    .replace(/\{이름\}/g, name2)
-    .replace(/\{픽업날짜\}/g, dispDate(normDate(o.pickupDate)))
-    .replace(/\{픽업시간\}/g, o.ampm+' '+o.pickupTime)
-    .replace(/\{주문내역\}/g, o.order);
-
+  var templateCode = type==='confirm' ? 'wcl3uqVyeX' : 'kEUPm9fUfl';
   var typeLabel = type==='confirm' ? '주문확인' : '준비완료';
 
-  // Apps Script 경유로 알리고 SMS 발송
   if(!scriptUrl){
     toast('⚠️ 구글 시트 연동 먼저 해주세요'); return;
   }
 
   var payload = {
-    action:     'sms',
-    accessKey:  alimSettings.apiKey,
-    secretKey:  alimSettings.userId,
-    serviceId:  alimSettings.serviceId,
-    sender:     alimSettings.senderNum.replace(/[^0-9]/g,''),
-    receiver:   phone,
-    msg:        msg
+    action:       'sms',
+    receiver:     phone,
+    templateCode: templateCode,
+    variables: {
+      '#{이름}':    name2,
+      '#{픽업날짜}': o.pickupDate,
+      '#{픽업시간}': o.ampm+' '+o.pickupTime,
+      '#{주문내역}': o.order
+    }
   };
 
   fetch(scriptUrl, {
@@ -811,9 +774,9 @@ function sendSMS(orderId, type){
       if(type==='confirm') localSt[orderId].smsConf=true;
       else                 localSt[orderId].smsReady=true;
       saveSt(); renderAll();
-      toast('📱 '+typeLabel+' 문자 발송 완료!');
+      toast('💬 '+typeLabel+' 알림톡 발송 완료!');
     } else {
-      toast('❌ 문자 실패: '+(d.message||'오류'));
+      toast('❌ 알림톡 실패: '+(d.message||'오류'));
     }
   })
   .catch(function(e){ toast('⚠️ 네트워크 오류: '+e.message); });
