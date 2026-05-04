@@ -736,7 +736,7 @@ function sendSMS(orderId, type){
   if(phone.length < 10){ toast('전화번호 오류: '+o.member); return; }
 
   var name2 = (o.name||'고객').trim();
-  var templateCode = type==='confirm' ? 'KA01TP260430003839076zsS8yaarF7D' : 'KA01TP260430023741157vGvwCdADuEW';
+  var templateCode = type==='confirm' ? 'KA01TP260430023839076zsS8yaarF7D' : 'KA01TP260430023741157vGvwCdADuEW';
   var typeLabel = type==='confirm' ? '주문확인' : '준비완료';
 
   if(!scriptUrl){
