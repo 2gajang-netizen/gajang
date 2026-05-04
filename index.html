@@ -472,6 +472,7 @@ header{background:var(--brand-green);height:50px;padding:0 14px;display:flex;ali
     <button class="srt-btn on" data-sort="time">⏱ 픽업시간순</button>
     <button class="srt-btn" data-sort="status">📋 상태순</button>
     <button class="srt-btn" data-sort="newest">🕐 최신접수순</button>
+    <button class="srt-btn" data-sort="loyal">🎯 단골순</button>
   </div>
   <div class="stats-row">
     <span class="sp all">전체 <b id="sAll">0</b></span>
@@ -968,7 +969,11 @@ function sortList(arr){
       if(dx!==dy) return dx<dy?-1:1;
       return statusPri(x)-statusPri(y);
     });
-  } else {
+  } else if(SORT==='loyal'){
+    a.sort(function(x,y){
+      return getVisitNo(y)-getVisitNo(x);
+    });
+  } else { // newest
     a.sort(function(x,y){ return new Date(y.ts)-new Date(x.ts); });
   }
   return a;
@@ -1626,7 +1631,7 @@ document.addEventListener('click',function(e){
 
   // 정렬
   var srt=t.closest('[data-sort]');
-  if(srt){ SORT=srt.dataset.sort; document.querySelectorAll('.srt-btn').forEach(function(b){ b.classList.remove('on'); }); srt.classList.add('on'); renderOrders(); toast({time:'픽업시간순 ⏱',status:'상태순 📋',newest:'최신접수순 🕐'}[SORT]); return; }
+  if(srt){ SORT=srt.dataset.sort; document.querySelectorAll('.srt-btn').forEach(function(b){ b.classList.remove('on'); }); srt.classList.add('on'); renderOrders(); toast({time:'픽업시간순 ⏱',status:'상태순 📋',newest:'최신접수순 🕐',loyal:'단골순 🎯'}[SORT]); return; }
 
   // 날짜 필터
   var df=t.closest('[data-dfilter]');
