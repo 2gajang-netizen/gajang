@@ -652,6 +652,7 @@ var localSt   = JSON.parse(localStorage.getItem('ls1988')   || '{}');
 var memos     = JSON.parse(localStorage.getItem('memo1988') || '{}');
 var calcData  = JSON.parse(localStorage.getItem('calc1988') || '{}');
 var scriptUrl = localStorage.getItem('su1988') || '';
+var hiddenIds = JSON.parse(localStorage.getItem('hidden1988') || '{}');
 
 var SORT='time', FILTER_DATE='', SEARCH='', MAIN_TAB='active';
 // ══════════════════════════════════════════════
@@ -1009,6 +1010,7 @@ function fetchSheet(){
       var newCnt=0;
       var sheetOrders=data.orders.map(function(o){
         var sid='sheet_'+o.id;
+        if(hiddenIds[sid]) return null; // 숨김 처리된 주문 제외
         var ls=localSt[sid]||{};
         if(!prevIds[sid]) newCnt++;
         // 날짜/시간 항상 재파싱 (localStorage 오염 방지)
@@ -1031,7 +1033,7 @@ function fetchSheet(){
           deleted:     false,
         });
       });
-      orders=orders.filter(function(o){ return o.source==='manual'; }).concat(sheetOrders);
+      orders=orders.filter(function(o){ return o.source==='manual'; }).concat(sheetOrders.filter(Boolean));
       save();
       setSyncState('on','연결됨');
       document.getElementById('lsync').textContent='갱신: '+nowHM();
@@ -1372,6 +1374,11 @@ function deleteOrder(id){
   if(idx===-1) return;
   var o=orders.splice(idx,1)[0];
   o.deletedAt=new Date().toISOString();
+  // 시트 주문이면 hiddenIds에 저장 (새로고침해도 안 나오게)
+  if(o.source==='sheet'){
+    hiddenIds[String(o.id)]=true;
+    localStorage.setItem('hidden1988', JSON.stringify(hiddenIds));
+  }
   trash.push(o);
   save(); saveTrash();
   renderAll(); toast('삭제 → 휴지통에서 복원 가능합니다 🗑');
@@ -1396,6 +1403,11 @@ function trashRestore(id){
   var idx=trash.findIndex(function(x){ return String(x.id)===String(id); });
   if(idx===-1) return;
   var o=trash.splice(idx,1)[0]; delete o.deletedAt;
+  // hiddenIds에서 제거 (복원 시 다시 보이게)
+  if(hiddenIds[String(o.id)]){
+    delete hiddenIds[String(o.id)];
+    localStorage.setItem('hidden1988', JSON.stringify(hiddenIds));
+  }
   orders.push(o); save(); saveTrash();
   renderAll(); toast('주문을 복원했습니다 ✅');
 }
