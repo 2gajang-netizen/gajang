@@ -241,35 +241,35 @@ header{background:var(--brand-green);height:50px;padding:0 14px;display:flex;ali
 .calc-dsel:focus{outline:none}
 .calc-dsel option{background:#333;color:#fff}
 .calc-summary{display:grid;grid-template-columns:repeat(auto-fill,minmax(90px,1fr));gap:7px;margin-bottom:10px}
-.sc{background:var(--paper);border:2px solid var(--border);border-radius:7px;padding:8px 10px}
-.sc-lbl{font-size:9px;font-weight:700;color:var(--lite);margin-bottom:2px}
-.sc-val{font-family:'Black Han Sans',sans-serif;font-size:19px;color:var(--brand-green)}
-.sc-unit{font-size:9px;color:var(--lite)}
 
-.cl-row{display:grid;grid-template-columns:60px 1fr 140px 110px 70px;gap:5px;padding:8px 9px;background:#fff;border:2px solid var(--border);border-radius:7px;margin-bottom:4px;align-items:center}
-.cl-row:hover{border-color:#CCC}
-.cl-row.done-r{opacity:.35}
-.cl-m{font-family:'Black Han Sans',sans-serif;font-size:14px;color:var(--brand-green)}
-.cl-n{font-size:9px;font-weight:700;color:var(--mid)}
-.cl-t{font-size:9px;color:var(--lite);margin-top:1px}
-.cl-ord{font-size:11px;font-weight:700;line-height:1.4}
-.cl-memo-inp{width:100%;padding:4px 7px;border:1.5px dashed var(--border);border-radius:4px;font-family:'Noto Sans KR',sans-serif;font-size:10px;background:var(--cream)}
-.cl-memo-inp:focus{outline:none;border-color:var(--orange);border-style:solid;background:#fff}
-.cl-memo-inp::placeholder{color:var(--lite)}
-.cl-kg-inp{width:100%;padding:5px 7px;border:2px solid var(--border);border-radius:4px;font-family:'Noto Sans KR',sans-serif;font-size:12px;font-weight:700;text-align:right;background:#fff}
-.cl-kg-inp:focus{outline:none;border-color:var(--brand-green)}
-.cl-kg-sub{font-size:9px;color:var(--lite);text-align:right;margin-top:2px}
-.cl-act{display:flex;flex-direction:column;gap:3px}
-.csbtn{width:100%;padding:4px 2px;border-radius:4px;border:1.5px solid;font-size:9px;font-weight:700;font-family:'Noto Sans KR',sans-serif;cursor:pointer;background:#fff;transition:all .12s}
-.csbtn.c1{border-color:#E5B8B4;color:var(--red)}
-.csbtn.c1.on{background:var(--red);color:#fff;border-color:var(--red)}
-.csbtn.c3{border-color:#A9DFBF;color:var(--green)}
-.csbtn.c3.on{background:var(--green);color:#fff;border-color:var(--green)}
-.calc-total{background:var(--char);color:#fff;border-radius:8px;padding:11px 14px;display:flex;flex-wrap:wrap;gap:14px;margin-top:8px}
-.ct-item .ct-lbl{font-size:10px;color:rgba(255,255,255,.55)}
-.ct-item .ct-val{font-family:'Black Han Sans',sans-serif;font-size:18px;letter-spacing:1px}
-.ct-item .ct-val em{color:#FFD700;font-style:normal}
-.calc-empty{text-align:center;padding:40px;color:var(--lite);font-size:12px}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 /* ── 고객 이력 모달 ─────────────────── */
 .ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:300;align-items:center;justify-content:center;padding:16px}
@@ -407,7 +407,7 @@ header{background:var(--brand-green);height:50px;padding:0 14px;display:flex;ali
 .sound-test-btn:hover{background:var(--brand-green);color:#fff;border-color:var(--brand-green)}
 
 @media(max-width:600px){
-  .cl-head,.cl-row{grid-template-columns:54px 1fr}
+  .cl-head,
   .cl-head>*:nth-child(n+3),.cl-row>*:nth-child(n+3){display:none}
 }
 </style>
@@ -526,15 +526,7 @@ header{background:var(--brand-green);height:50px;padding:0 14px;display:flex;ali
 </div>
 
       
-    </div>
     
-    <div>주문 원문</div><div>메모</div><div>출고량(g)</div><div>상태</div></div>
-    
-    
-      <div class="ct-item"><div class="ct-lbl">kg 환산</div><div class="ct-val"><em id="ctKgK">0.000</em> kg</div></div>
-      <div class="ct-item"><div class="ct-lbl">근 환산</div><div class="ct-val"><em id="ctGeun">0.00</em> 근</div></div>
-      <div class="ct-item"><div class="ct-lbl">처리</div><div class="ct-val"><em id="ctDone">0</em>/<span id="ctTotal2" style="color:rgba(255,255,255,.5)">0</span></div></div>
-    </div>
   </div>
 </div>
 
