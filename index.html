@@ -433,6 +433,10 @@ header{background:var(--green);height:50px;padding:0 12px;display:flex;align-ite
     </div>
     <div id="deliveryFields" style="display:none">
       <div class="fg"><label class="fl" style="color:var(--blue)">배달 주소*</label><input type="text" class="fi" id="fAddr" placeholder="도로명 또는 지번 주소"></div>
+      <div class="fr2">
+        <div class="fg"><label class="fl" style="color:var(--blue)">배달 희망날짜</label><input type="date" class="fi" id="fDlvDate"></div>
+        <div class="fg"><label class="fl" style="color:var(--blue)">배달 희망시간</label><input type="time" class="fi" id="fDlvTime"></div>
+      </div>
       <div class="fg"><label class="fl" style="color:var(--blue)">결제수단*</label>
         <select class="fi" id="fPay"><option value="">선택하세요</option><option value="카드">카드</option><option value="계좌이체">계좌이체</option><option value="현금">현금</option></select>
       </div>
@@ -732,6 +736,8 @@ function fetchSheet(){
         address:String(o.address||'').trim(),
         payment:String(o.payment||'').trim(),
         request:String(o.request||'').trim(),
+        deliveryDate:String(o.deliveryDate||'').trim(),
+        deliveryTime:String(o.deliveryTime||'').trim(),
         confirmed:ls.confirmed!==undefined?ls.confirmed:o.confirmed,
         ready:ls.ready!==undefined?ls.ready:o.ready,
         done:ls.done!==undefined?ls.done:o.done,
@@ -873,18 +879,19 @@ function cardHTML(o){
     var phone2=formatPhone(o.member);
     var pay2=o.payment||'-';
     var req=(o.request||'').replace(/</g,'&lt;');
-    var copyAll='📍 주소: '+(o.address||'')+'\n📞 연락처: '+formatPhone(o.member)+'\n💳 결제: '+(o.payment||'')+'\n🥩 주문: '+o.order+(req?'\n📝 요청: '+req:'');
+    var copyAll='📍 주소: '+(o.address||'')+'\n📞 연락처: '+formatPhone(o.member)+'\n💳 결제: '+(o.payment||'')+(o.deliveryDate?'\n📅 배달희망: '+o.deliveryDate+(o.deliveryTime?' '+o.deliveryTime:''):'')+'\n🥩 주문: '+o.order+(req?'\n📝 요청: '+req:'');
     dlvBlock='<div class="delivery-box">'
       +(req?'<div class="delivery-req">📝 '+req+'</div>':'')
       +'<div class="delivery-row"><span class="delivery-label">📍 주소</span><span class="delivery-val">'+addr+'</span><button class="copy-btn" data-copy="'+addr+'">복사</button></div>'
       +'<div class="delivery-row"><span class="delivery-label">📞 연락처</span><span class="delivery-val">'+phone2+'</span><button class="copy-btn" data-copy="'+phone2+'">복사</button></div>'
-      +'<div class="delivery-row"><span class="delivery-label">💳 결제</span><span class="delivery-val">'+pay2+'</span><button class="copy-btn" data-copy="'+pay2+'">복사</button></div>'
+      +'<div class="delivery-row"><span class="delivery-label">💳 결제</span><span class="delivery-val">'+pay2+'</span><button class="copy-btn" data-copy="'+pay2+'">복사</button></div>'+(o.deliveryDate?'<div class="delivery-row"><span class="delivery-label">📅 희망</span><span class="delivery-val">'+o.deliveryDate+(o.deliveryTime?' '+o.deliveryTime:'')+'</span></div>':'')
       +'<button class="copy-all-btn" data-copy="'+copyAll.replace(/"/g,'&quot;')+'">📋 전체복사</button>'
       +'</div>';
   }
 
+  var delivTimeStr=o.deliveryDate?(o.deliveryDate+(o.deliveryTime?' '+o.deliveryTime:'')):'당일';
   var timeBlock=dlv
-    ?'<div class="c-time-main" style="color:var(--blue);font-size:12px">🏍️ 배달</div><div class="c-time-date">'+dlabel+'</div>'
+    ?'<div class="c-time-main" style="color:var(--blue);font-size:12px">🏍️ 배달</div><div class="c-time-date">'+delivTimeStr+'</div>'
     :'<div class="c-time-main">'+(o.ampm||'오후')+' '+o.pickupTime+'</div><div class="c-time-date">'+dlabel+'</div>';
 
   return '<div class="ocard s-'+s+(dlv?' is-delivery':'')+'" id="oc-'+o.id+'">'
@@ -1014,7 +1021,7 @@ function openAddModal(){
   document.getElementById('fD').value=new Date().toISOString().split('T')[0];
   document.getElementById('fT').value=''; document.getElementById('fO').value='';
   document.getElementById('fAddr').value=''; document.getElementById('fPay').value='';
-  document.getElementById('fReq').value=''; document.getElementById('editId').value='';
+  document.getElementById('fReq').value=''; document.getElementById('fDlvDate').value=''; document.getElementById('fDlvTime').value=''; document.getElementById('editId').value='';
   document.getElementById('btnAddOk').textContent='등록하기';
   setModalType('pickup');
   document.getElementById('addOv').classList.add('open');
@@ -1049,15 +1056,18 @@ function submitOrder(){
   } else {
     address=document.getElementById('fAddr').value.trim(); payment=document.getElementById('fPay').value;
     request=document.getElementById('fReq').value.trim();
+    var dlvDateVal=document.getElementById('fDlvDate').value; var dlvTimeVal=document.getElementById('fDlvTime').value;
+    var deliveryDate=dlvDateVal?(function(d){ return d.getFullYear()+'.'+String(d.getMonth()+1).padStart(2,'0')+'.'+String(d.getDate()).padStart(2,'0'); })(new Date(dlvDateVal)):'';
+    var deliveryTime=dlvTimeVal||'';
     if(!address||!payment){ toast('배달 주소와 결제수단을 입력하세요'); return; }
     fd=todayND(); time='00:00';
   }
   if(editId){
     var o=orders.find(function(x){ return String(x.id)===String(editId); });
-    if(o){ o.member=member; o.name=name; o.pickupDate=fd; o.pickupTime=time; o.ampm=ampm; o.order=order; o.orderType=orderType; o.address=address; o.payment=payment; o.request=request; }
+    if(o){ o.member=member; o.name=name; o.pickupDate=fd; o.pickupTime=time; o.ampm=ampm; o.order=order; o.orderType=orderType; o.address=address; o.payment=payment; o.request=request; o.deliveryDate=deliveryDate||''; o.deliveryTime=deliveryTime||''; }
     save(); toast('주문 수정됨 ✏️');
   } else {
-    orders.push({id:'manual_'+Date.now(),source:'manual',member:member,name:name,pickupDate:fd,pickupTime:time,ampm:ampm,order:order,orderType:orderType,address:address,payment:payment,request:request,confirmed:false,ready:false,done:false,noshow:false,deleted:false,ts:new Date().toISOString()});
+    orders.push({id:'manual_'+Date.now(),source:'manual',member:member,name:name,pickupDate:fd,pickupTime:time,ampm:ampm,order:order,orderType:orderType,address:address,payment:payment,request:request,deliveryDate:deliveryDate||'',deliveryTime:deliveryTime||'',confirmed:false,ready:false,done:false,noshow:false,deleted:false,ts:new Date().toISOString()});
     save(); toast('주문 등록 완료 🥩');
   }
   document.getElementById('addOv').classList.remove('open'); renderAll();
