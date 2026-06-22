@@ -478,33 +478,40 @@ fxLoop();
 
 /* ============== 사운드 (WebAudio 합성, 외부파일 불필요) ============== */
 let actx = null;
+let audioReady = false;
+
+async function unlockAudio(){
+  try{
+    if(!actx){
+      actx = new (window.AudioContext||window.webkitAudioContext)();
+    }
+    if(actx.state !== 'running'){
+      await actx.resume();
+    }
+    if(!audioReady){
+      // iOS Safari 잠금 완전 해제: 실제 무음 버퍼 재생
+      const buf = actx.createBuffer(1, actx.sampleRate * 0.1, actx.sampleRate);
+      const src = actx.createBufferSource();
+      src.buffer = buf;
+      src.connect(actx.destination);
+      src.start(0);
+      audioReady = true;
+    }
+  }catch(e){}
+}
+
 function getActx(){
   if(!actx){
     try{ actx = new (window.AudioContext||window.webkitAudioContext)(); }catch(e){}
   }
-  // iOS Safari는 suspended 상태로 시작 → resume 필수
   if(actx && actx.state === 'suspended'){
     actx.resume();
   }
   return actx;
 }
 
-/* iOS Safari 오디오 잠금 해제: 첫 터치/클릭 시 AudioContext 미리 깨워두기 */
-function unlockAudio(){
-  if(actx) return;
-  try{
-    actx = new (window.AudioContext||window.webkitAudioContext)();
-    // 무음 버퍼를 한 번 재생해서 iOS 잠금 해제
-    const buf = actx.createBuffer(1, 1, 22050);
-    const src = actx.createBufferSource();
-    src.buffer = buf;
-    src.connect(actx.destination);
-    src.start(0);
-    actx.resume();
-  }catch(e){}
-}
+// 페이지 어디든 첫 터치 시 미리 unlock
 document.addEventListener('touchstart', unlockAudio, {once:true, passive:true});
-document.addEventListener('touchend', unlockAudio, {once:true, passive:true});
 document.addEventListener('click', unlockAudio, {once:true});
 function beep(freq, duration, type, gain, delay){
   const ac = getActx();
@@ -746,12 +753,13 @@ function drawGrade(){
 }
 
 /* ============== 카드 선택 -> 연출 ============== */
-function selectCard(slot){
+async function selectCard(slot){
   cardsLocked = true;
   document.querySelectorAll(".card-slot").forEach(s=>{
     if(s !== slot) s.classList.add("disabled");
   });
 
+  await unlockAudio();
   sfxSelect();
   if(navigator.vibrate) navigator.vibrate(40);
 
@@ -892,8 +900,8 @@ function resetRevealCard(){
 }
 
 /* ============== 시작 버튼 ============== */
-document.getElementById("start-btn").addEventListener("click", ()=>{
-  getActx(); // 사용자 제스처로 오디오 컨텍스트 활성화
+document.getElementById("start-btn").addEventListener("click", async ()=>{
+  await unlockAudio();
   cardsLocked = false;
   buildCards();
   showScreen("card");
