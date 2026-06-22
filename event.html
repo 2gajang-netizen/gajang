@@ -482,8 +482,30 @@ function getActx(){
   if(!actx){
     try{ actx = new (window.AudioContext||window.webkitAudioContext)(); }catch(e){}
   }
+  // iOS Safari는 suspended 상태로 시작 → resume 필수
+  if(actx && actx.state === 'suspended'){
+    actx.resume();
+  }
   return actx;
 }
+
+/* iOS Safari 오디오 잠금 해제: 첫 터치/클릭 시 AudioContext 미리 깨워두기 */
+function unlockAudio(){
+  if(actx) return;
+  try{
+    actx = new (window.AudioContext||window.webkitAudioContext)();
+    // 무음 버퍼를 한 번 재생해서 iOS 잠금 해제
+    const buf = actx.createBuffer(1, 1, 22050);
+    const src = actx.createBufferSource();
+    src.buffer = buf;
+    src.connect(actx.destination);
+    src.start(0);
+    actx.resume();
+  }catch(e){}
+}
+document.addEventListener('touchstart', unlockAudio, {once:true, passive:true});
+document.addEventListener('touchend', unlockAudio, {once:true, passive:true});
+document.addEventListener('click', unlockAudio, {once:true});
 function beep(freq, duration, type, gain, delay){
   const ac = getActx();
   if(!ac) return;
