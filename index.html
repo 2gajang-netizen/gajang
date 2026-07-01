@@ -310,6 +310,37 @@ header{background:var(--green);height:50px;padding:0 12px;display:flex;align-ite
 .list-empty{text-align:center;padding:50px 20px;color:var(--lite)}
 .list-empty .ico{font-size:38px;margin-bottom:6px}
 .list-empty .t{font-size:13px;font-weight:700;color:var(--mid)}
+/* 매장 토글 */
+.store-toggle{display:flex;gap:6px;margin-bottom:12px}
+.store-btn{flex:1;padding:10px;border:2px solid var(--border);border-radius:8px;font-family:'Noto Sans KR',sans-serif;font-size:13px;font-weight:700;cursor:pointer;background:#fff;color:var(--mid);text-align:center}
+.store-btn.on{border-color:var(--green);background:var(--green);color:#fff}
+.store-badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;margin-left:5px;vertical-align:middle}
+.store-badge.iaja{background:#E8F5E9;color:var(--green)}
+.store-badge.saga{background:#EBF5FB;color:var(--blue)}
+
+/* 취소 모달 */
+.cancel-reason-list{display:flex;flex-direction:column;gap:6px;margin-bottom:10px}
+.cancel-reason-item{display:flex;align-items:center;gap:6px;padding:7px 10px;border:1.5px solid var(--border);border-radius:7px;background:#fff;cursor:pointer;font-size:12px;font-weight:700;color:var(--char)}
+.cancel-reason-item:hover{border-color:#C0392B;color:#C0392B}
+.cancel-reason-item.selected{border-color:#C0392B;background:#FEF0ED;color:#C0392B}
+.cancel-custom-inp{width:100%;padding:8px 10px;border:2px solid var(--border);border-radius:6px;font-family:'Noto Sans KR',sans-serif;font-size:12px;background:var(--cream);margin-top:4px}
+.cancel-custom-inp:focus{outline:none;border-color:#C0392B;background:#fff}
+.cancel-manage-btn{padding:4px 10px;border:1.5px solid var(--border);border-radius:5px;background:#fff;color:var(--mid);font-family:'Noto Sans KR',sans-serif;font-size:10px;font-weight:700;cursor:pointer;margin-bottom:8px}
+.cancel-manage-btn:hover{background:var(--mid);color:#fff}
+.cancel-manage-list{display:flex;flex-direction:column;gap:5px;margin-bottom:10px}
+.cancel-manage-item{display:flex;align-items:center;gap:5px}
+.cancel-manage-inp{flex:1;padding:5px 8px;border:1.5px solid var(--border);border-radius:5px;font-family:'Noto Sans KR',sans-serif;font-size:11px;background:#fff}
+.cancel-manage-del{padding:3px 7px;border:1.5px solid #F5B7B1;border-radius:4px;background:#fff;color:#C0392B;font-family:'Noto Sans KR',sans-serif;font-size:10px;font-weight:700;cursor:pointer}
+.cancel-add-btn{width:100%;padding:7px;border:2px dashed var(--border);border-radius:6px;background:#fff;color:var(--mid);font-family:'Noto Sans KR',sans-serif;font-size:11px;font-weight:700;cursor:pointer;margin-bottom:8px}
+.cancel-add-btn:hover{border-color:var(--green);color:var(--green)}
+/* 금액 입력 모달 */
+.amount-inp{width:100%;padding:12px;border:2px solid var(--border);border-radius:8px;font-family:'Noto Sans KR',sans-serif;font-size:20px;font-weight:700;text-align:center;background:#fff;margin-bottom:8px}
+.amount-inp:focus{outline:none;border-color:var(--green)}
+.amount-hint{font-size:11px;color:var(--lite);text-align:center;margin-bottom:12px}
+/* cbtn 취소 */
+.cbtn.c-cancel{border-color:#F5B7B1;color:#C0392B}
+.cbtn.c-cancel:hover,.cbtn.c-cancel.on{background:#C0392B;color:#fff;border-color:#C0392B}
+
 </style>
 </head>
 <body>
@@ -317,7 +348,7 @@ header{background:var(--green);height:50px;padding:0 12px;display:flex;align-ite
 <header>
   <span style="font-family:'Black Han Sans',sans-serif;font-size:17px;color:#fff;letter-spacing:1px">가장<span style="color:#E8961A">정육점</span></span>
   <div class="hright">
-    <button class="sync-badge" id="btnSync"><div class="dot" id="syncDot"></div><span id="syncTxt">미연결</span></button>
+    <span class="store-badge iaja" id="storeBadgeHdr">이아자점</span><button class="sync-badge" id="btnSync"><div class="dot" id="syncDot"></div><span id="syncTxt">미연결</span></button>
     <button class="btn-hdr" style="background:#FEE500;color:#3A1D1D" id="btnAlimSetting">📱 문자설정</button>
     <button class="btn-hdr" style="background:#FF6B35;color:#fff" id="btnAlertSetting">🔔 알림설정</button>
     <button class="btn-hdr white" id="btnOpenAdd">＋ 주문추가</button>
@@ -438,7 +469,7 @@ header{background:var(--green);height:50px;padding:0 12px;display:flex;align-ite
         <div class="fg"><label class="fl" style="color:var(--blue)">배달 희망시간</label><input type="time" class="fi" id="fDlvTime"></div>
       </div>
       <div class="fg"><label class="fl" style="color:var(--blue)">결제수단*</label>
-        <select class="fi" id="fPay"><option value="">선택하세요</option><option value="카드">카드</option><option value="계좌이체">계좌이체</option><option value="현금">현금</option></select>
+        <select class="fi" id="fPay"><option value="">선택하세요</option><option value="카드">카드</option><option value="계좌이체">계좌이체</option><option value="현금">현금</option><option value="서울페이">서울페이</option><option value="선결제">선결제</option></select>
       </div>
       <div class="fg"><label class="fl" style="color:var(--blue)">배달 요청사항</label><input type="text" class="fi" id="fReq" placeholder="예) 벨 누르지 마세요, 문 앞에 놔주세요"></div>
     </div>
@@ -478,7 +509,14 @@ K:주문확인  L:준비완료  M:수령완료</div></div></div></div>
   <div class="alim-modal">
     <div class="alim-title"><span>💬 카카오 알림톡 설정</span><button class="modal-close" id="btnAlimClose">✕</button></div>
     <div class="alim-sec">
-      <div class="alim-toggle-row"><div class="alim-toggle-lbl">알림톡 자동발송 사용</div><label class="alim-toggle"><input type="checkbox" id="alimEnabled"><span class="alim-slider"></span></label></div>
+      <div class="alim-sec">
+      <div class="alim-sec-title">🏪 매장 선택</div>
+      <div class="store-toggle">
+        <button class="store-btn" id="storeIaJa" onclick="setStore('iaja')">🏪 이아자점</button>
+        <button class="store-btn" id="storeSaGa" onclick="setStore('saga')">🏪 사가정점</button>
+      </div>
+    </div>
+    <div class="alim-toggle-row"><div class="alim-toggle-lbl">알림톡 자동발송 사용</div><label class="alim-toggle"><input type="checkbox" id="alimEnabled"><span class="alim-slider"></span></label></div>
       <div class="alim-hint">ON 시 주문확인·준비완료 버튼 클릭 시 자동 발송됩니다</div>
     </div>
     <div class="alim-sec">
@@ -496,6 +534,18 @@ K:주문확인  L:준비완료  M:수령완료</div></div></div></div>
     <div class="alim-sec">
       <div class="alim-sec-title">🏍️ 배달 준비완료</div>
       <div class="alim-hint-box" style="background:var(--delivery-bg);border:1px solid var(--delivery-border)">[가장정육점] #{이름} 고객님<br>주문하신 상품이 준비되었습니다 🥩✨<br>🏍️ 배달: #{배달주소}<br>🥩 주문: #{주문내역}<br>곧 배달 출발합니다! 감사합니다 🙏</div>
+    </div>
+        <div class="alim-sec">
+      <div class="alim-sec-title">🚫 주문 취소 안내</div>
+      <div class="fg"><label class="fl">취소 템플릿 ID</label><input type="text" class="fi" id="tmplCancel" placeholder="KA01TP..."></div>
+    </div>
+    <div class="alim-sec">
+      <div class="alim-sec-title">🏍️ 배달 준비완료 - 이아자점</div>
+      <div class="fg"><label class="fl">이아자점 템플릿 ID</label><input type="text" class="fi" id="tmplDlvIaJa" placeholder="KA01TP..."></div>
+    </div>
+    <div class="alim-sec">
+      <div class="alim-sec-title">🏍️ 배달 준비완료 - 사가정점</div>
+      <div class="fg"><label class="fl">사가정점 템플릿 ID</label><input type="text" class="fi" id="tmplDlvSaGa" placeholder="KA01TP..."></div>
     </div>
     <button class="alim-save-btn" id="btnAlimSave">💾 설정 저장</button>
   </div>
@@ -531,6 +581,47 @@ K:주문확인  L:준비완료  M:수령완료</div></div></div></div>
   </div>
 </div>
 
+
+<!-- 취소 안내 모달 -->
+<div class="ov" id="cancelOv">
+  <div class="modal" style="max-width:420px">
+    <div class="mtitle"><span id="cancelModalTitle">🚫 취소 안내</span><button class="modal-close" id="btnCancelClose">✕</button></div>
+    <div id="cancelReasonView">
+      <div style="font-size:11px;font-weight:700;color:var(--mid);margin-bottom:8px">취소 사유 선택</div>
+      <div class="cancel-reason-list" id="cancelReasonList"></div>
+      <div id="cancelCustomWrap" style="display:none">
+        <input type="text" class="cancel-custom-inp" id="cancelCustomInp" placeholder="취소 사유를 직접 입력하세요">
+      </div>
+      <button class="cancel-manage-btn" id="btnCancelManage">⚙️ 사유 목록 관리</button>
+    </div>
+    <div id="cancelManageView" style="display:none">
+      <div style="font-size:11px;font-weight:700;color:var(--mid);margin-bottom:8px">취소 사유 관리</div>
+      <div class="cancel-manage-list" id="cancelManageList"></div>
+      <button class="cancel-add-btn" id="btnCancelAddReason">＋ 사유 추가</button>
+      <button class="cancel-manage-btn" id="btnCancelManageDone">← 돌아가기</button>
+    </div>
+    <input type="hidden" id="cancelOrderId">
+    <div class="mbtns">
+      <button class="bcx" id="btnCancelAbort">취소</button>
+      <button class="bok" style="background:#C0392B" id="btnCancelSend">취소 안내 발송 🚫</button>
+    </div>
+  </div>
+</div>
+
+<!-- 금액 입력 모달 (배달 출발준비) -->
+<div class="ov" id="amountOv">
+  <div class="modal" style="max-width:360px">
+    <div class="mtitle"><span>💰 결제 금액 입력</span><button class="modal-close" id="btnAmountClose">✕</button></div>
+    <div style="font-size:12px;color:var(--mid);margin-bottom:10px">준비완료 알림톡에 포함될 금액을 입력하세요</div>
+    <input type="number" class="amount-inp" id="amountInp" placeholder="0" inputmode="numeric">
+    <div class="amount-hint">숫자만 입력 (예: 35000)</div>
+    <input type="hidden" id="amountOrderId">
+    <div class="mbtns">
+      <button class="bcx" id="btnAmountAbort">취소</button>
+      <button class="bok" id="btnAmountSend">준비완료 발송 🥩</button>
+    </div>
+  </div>
+</div>
 <div class="toast" id="toast"></div>
 
 <script>
@@ -548,8 +639,25 @@ var TMPL={
   pickupConfirm:  'KA01TP260430023839076zsS8yaarF7D',
   pickupReady:    'KA01TP260430023741157vGvwCdADuEW',
   deliveryConfirm:'KA01TP2605260600389872MWTE7kEVXH',
-  deliveryReady:  'KA01TP260522161637825p1AKHLVgbmo'
+  deliveryReady:  'KA01TP260522161637825p1AKHLVgbmo',
+  cancel:         'KA01TP260701054614255T6h1UfKo0YF',
+  deliveryReadyIaJa: 'KA01TP260701054326632920dfQ3Tluq',
+  deliveryReadySaGa: 'KA01TP260701054416607xLVYRafcOL6'
 };
+
+// 매장 설정
+var STORE = localStorage.getItem('store1988') || 'iaja'; // 'iaja' or 'saga'
+function saveStore(){ localStorage.setItem('store1988', STORE); }
+function getDeliveryReadyTmpl(){ return STORE === 'saga' ? TMPL.deliveryReadySaGa : TMPL.deliveryReadyIaJa; }
+
+// 취소 사유 기본값
+var cancelReasons = JSON.parse(localStorage.getItem('cr1988') || JSON.stringify([
+  '재고 소진',
+  '영업 종료 (마감)',
+  '배달 불가 지역',
+  '고객 요청 취소'
+]));
+function saveCancelReasons(){ localStorage.setItem('cr1988', JSON.stringify(cancelReasons)); }
 
 // 저장
 function save()     { localStorage.setItem('o1988',    JSON.stringify(orders)); }
@@ -569,9 +677,25 @@ function copyText(t){ if(navigator.clipboard){ navigator.clipboard.writeText(t).
 var alimSt=(function(){ try{ return JSON.parse(localStorage.getItem('alim1988')||'{}'); }catch(e){ return {}; } })();
 if(alimSt.enabled===undefined) alimSt.enabled=false;
 function saveAlimSt(){ localStorage.setItem('alim1988',JSON.stringify(alimSt)); }
-function openAlimModal(){ document.getElementById('alimEnabled').checked=!!alimSt.enabled; document.getElementById('alimOv').classList.add('open'); }
+function openAlimModal(){ 
+  document.getElementById('alimEnabled').checked=!!alimSt.enabled;
+  document.getElementById('storeIaJa').classList.toggle('on', STORE==='iaja');
+  document.getElementById('storeSaGa').classList.toggle('on', STORE==='saga');
+  document.getElementById('tmplCancel').value=TMPL.cancel||'';
+  document.getElementById('tmplDlvIaJa').value=TMPL.deliveryReadyIaJa||'';
+  document.getElementById('tmplDlvSaGa').value=TMPL.deliveryReadySaGa||'';
+  document.getElementById('alimOv').classList.add('open');
+}
 function closeAlimModal(){ document.getElementById('alimOv').classList.remove('open'); }
-function saveAlimModal(){ alimSt.enabled=document.getElementById('alimEnabled').checked; saveAlimSt(); closeAlimModal(); renderAll(); toast('문자 설정 저장 완료 📱'); }
+function saveAlimModal(){
+  alimSt.enabled=document.getElementById('alimEnabled').checked;
+  saveAlimSt();
+  TMPL.cancel=document.getElementById('tmplCancel').value.trim();
+  TMPL.deliveryReadyIaJa=document.getElementById('tmplDlvIaJa').value.trim();
+  TMPL.deliveryReadySaGa=document.getElementById('tmplDlvSaGa').value.trim();
+  localStorage.setItem('tmpl1988', JSON.stringify({cancel:TMPL.cancel,deliveryReadyIaJa:TMPL.deliveryReadyIaJa,deliveryReadySaGa:TMPL.deliveryReadySaGa}));
+  closeAlimModal(); renderAll(); toast('문자 설정 저장 완료 📱');
+}
 
 // 알림 설정
 var alertSt=(function(){ try{ return JSON.parse(localStorage.getItem('alert1988')||'{}'); }catch(e){ return {}; } })();
@@ -923,6 +1047,7 @@ function cardHTML(o){
     +'<button class="cbtn c1'+(o.confirmed?' on':'')+'" data-tid="'+o.id+'" data-tf="confirmed">'+(o.confirmed?'✅':'🔲')+' 주문확인'+(alimSt.enabled?' 💬':'')+' </button>'
     +'<button class="cbtn c2'+(o.ready?' on':'')+'" data-tid="'+o.id+'" data-tf="ready">'+(o.ready?'✅':'🔲')+' '+(dlv?'출발준비':'준비완료')+(alimSt.enabled?' 💬':'')+' </button>'
     +'<button class="cbtn c3'+(o.done?' on':'')+'" data-tid="'+o.id+'" data-tf="done">'+(o.done?'✅':'🔲')+' '+(dlv?'배달완료':'수령완료')+'</button>'
+    +'<button class="cbtn c-cancel" data-cancel="'+o.id+'">🚫 취소안내</button>'
     +'</div>'
     +'</div></div>';
 }
@@ -1076,6 +1201,13 @@ function submitOrder(){
 // 상태 토글
 function toggle(id, field){
   var o=orders.find(function(x){ return String(x.id)===String(id); }); if(!o) return;
+  // 배달 출발준비 → 금액 입력 팝업
+  if(field==='ready' && !o.ready && isDelivery(o)){
+    document.getElementById('amountOrderId').value=id;
+    document.getElementById('amountInp').value='';
+    document.getElementById('amountOv').classList.add('open');
+    return;
+  }
   o[field]=!o[field];
   if(field==='done'&&o.done){ o.confirmed=true; o.ready=true; }
   if(field==='ready'&&o.ready){ o.confirmed=true; }
@@ -1088,6 +1220,133 @@ function toggle(id, field){
   toast(msgs[field]);
   if(alimSt.enabled){ if(field==='confirmed'&&o.confirmed) sendSMS(id,'confirm'); if(field==='ready'&&o.ready) sendSMS(id,'ready'); }
   renderAll();
+}
+
+
+
+// 매장 설정
+function setStore(s){
+  STORE = s;
+  saveStore();
+  document.getElementById('storeIaJa').classList.toggle('on', s==='iaja');
+  document.getElementById('storeSaGa').classList.toggle('on', s==='saga');
+  updateStoreBadge();
+}
+function updateStoreBadge(){
+  var badge = document.getElementById('storeBadgeHdr');
+  if(badge){
+    badge.textContent = STORE==='saga' ? '사가정점' : '이아자점';
+    badge.className = 'store-badge '+(STORE==='saga'?'saga':'iaja');
+  }
+}
+
+// ── 취소 안내 ──
+var _cancelOrderId = null;
+var _cancelSelectedReason = null;
+
+function openCancelModal(id){
+  _cancelOrderId = id;
+  _cancelSelectedReason = null;
+  var o=orders.find(function(x){ return String(x.id)===String(id); });
+  document.getElementById('cancelModalTitle').textContent = '🚫 취소 안내 - '+(o?o.name||formatPhone(o.member):'');
+  document.getElementById('cancelOrderId').value = id;
+  document.getElementById('cancelReasonView').style.display = '';
+  document.getElementById('cancelManageView').style.display = 'none';
+  document.getElementById('cancelCustomWrap').style.display = 'none';
+  document.getElementById('cancelCustomInp').value = '';
+  renderCancelReasons();
+  document.getElementById('cancelOv').classList.add('open');
+}
+
+function renderCancelReasons(){
+  var list = document.getElementById('cancelReasonList');
+  var html = cancelReasons.map(function(r, i){
+    return '<div class="cancel-reason-item" data-reason-idx="'+i+'">'+r+'</div>';
+  }).join('');
+  html += '<div class="cancel-reason-item" data-reason-idx="custom">✏️ 직접 입력</div>';
+  list.innerHTML = html;
+  // 선택 상태 복원
+  list.querySelectorAll('.cancel-reason-item').forEach(function(el){
+    el.addEventListener('click', function(){
+      list.querySelectorAll('.cancel-reason-item').forEach(function(x){ x.classList.remove('selected'); });
+      el.classList.add('selected');
+      var idx = el.dataset.reasonIdx;
+      if(idx === 'custom'){
+        _cancelSelectedReason = 'custom';
+        document.getElementById('cancelCustomWrap').style.display = '';
+        document.getElementById('cancelCustomInp').focus();
+      } else {
+        _cancelSelectedReason = cancelReasons[parseInt(idx)];
+        document.getElementById('cancelCustomWrap').style.display = 'none';
+      }
+    });
+  });
+}
+
+function renderCancelManage(){
+  var list = document.getElementById('cancelManageList');
+  list.innerHTML = cancelReasons.map(function(r, i){
+    return '<div class="cancel-manage-item">'
+      +'<input type="text" class="cancel-manage-inp" value="'+r.replace(/"/g,'&quot;')+'" data-manage-idx="'+i+'">'
+      +'<button class="cancel-manage-del" data-manage-del="'+i+'">삭제</button>'
+      +'</div>';
+  }).join('');
+}
+
+function sendCancelAlimtalk(){
+  var reason = _cancelSelectedReason;
+  if(!reason){ toast('취소 사유를 선택하세요'); return; }
+  if(reason === 'custom'){
+    reason = document.getElementById('cancelCustomInp').value.trim();
+    if(!reason){ toast('취소 사유를 입력하세요'); return; }
+  }
+  var id = document.getElementById('cancelOrderId').value;
+  var o = orders.find(function(x){ return String(x.id)===String(id); });
+  if(!o){ toast('주문을 찾을 수 없습니다'); return; }
+  if(!TMPL.cancel){ toast('⚠️ 취소 템플릿 ID를 먼저 설정하세요'); return; }
+  if(!alimSt.enabled){ toast('⚠️ 알림톡이 꺼져 있습니다'); return; }
+  var phone = o.member.replace(/[^0-9]/g,'');
+  if(phone.length < 10){ toast('전화번호 오류'); return; }
+  var vars = {'#{이름}': o.name||'고객', '#{취소사유}': reason};
+  fetch(scriptUrl,{method:'POST',headers:{'Content-Type':'text/plain;charset=UTF-8'},body:JSON.stringify({action:'sms',receiver:phone,templateCode:TMPL.cancel,variables:vars}),redirect:'follow'})
+  .then(function(r){ return r.json().catch(function(){ return r.text().then(function(t){ try{return JSON.parse(t);}catch(e){return{success:false,message:t};} }); }); })
+  .then(function(d){ 
+    if(d.success){ toast('🚫 취소 안내 발송 완료!'); document.getElementById('cancelOv').classList.remove('open'); }
+    else { toast('❌ 발송 실패: '+(d.message||'')); }
+  })
+  .catch(function(e){ toast('⚠️ 오류: '+e.message); });
+}
+
+// ── 금액 입력 (배달 출발준비) ──
+function sendDeliveryReady(id, amount){
+  var o = orders.find(function(x){ return String(x.id)===String(id); }); if(!o) return;
+  // 매장별 템플릿 — 문자설정에서 설정한 값 사용
+  var tpl = getDeliveryReadyTmpl() || TMPL.deliveryReady;
+  if(!tpl){ toast('⚠️ 배달 준비완료 템플릿 ID를 설정하세요'); return; }
+  if(!alimSt.enabled){ 
+    // 알림톡 꺼져있어도 상태는 변경
+    doReadyToggle(id); return; 
+  }
+  var phone = o.member.replace(/[^0-9]/g,'');
+  var amtStr = Number(amount).toLocaleString();
+  var vars = {'#{이름}': o.name||'고객', '#{금액}': amtStr};
+  fetch(scriptUrl,{method:'POST',headers:{'Content-Type':'text/plain;charset=UTF-8'},body:JSON.stringify({action:'sms',receiver:phone,templateCode:tpl,variables:vars}),redirect:'follow'})
+  .then(function(r){ return r.json().catch(function(){ return r.text().then(function(t){ try{return JSON.parse(t);}catch(e){return{success:false,message:t};} }); }); })
+  .then(function(d){ 
+    if(d.success){ toast('💬 준비완료 발송 완료!'); }
+    else { toast('❌ 발송 실패: '+(d.message||'')); }
+  })
+  .catch(function(e){ toast('⚠️ 오류: '+e.message); });
+  doReadyToggle(id);
+}
+
+function doReadyToggle(id){
+  var o = orders.find(function(x){ return String(x.id)===String(id); }); if(!o) return;
+  o.ready = true; o.confirmed = true;
+  if(!localSt[id]) localSt[id]={};
+  localSt[id].ready = true; localSt[id].confirmed = true;
+  saveSt(); save(); pushStatus(o,'ready');
+  renderAll(); toast('준비 완료 🥩');
 }
 
 // TOAST
@@ -1142,6 +1401,32 @@ document.addEventListener('click',function(e){
   if(nb){ toggleNoshow(nb.dataset.noshow); return; }
   var mb=t.closest('[data-mute]');
   if(mb){ toggleMute(mb.dataset.mute); return; }
+  var cab=t.closest('[data-cancel]');
+  if(cab){ openCancelModal(cab.dataset.cancel); return; }
+  // 취소 모달
+  if(t.id==='btnCancelClose'||t.id==='btnCancelAbort'){ document.getElementById('cancelOv').classList.remove('open'); return; }
+  if(t.id==='btnCancelSend'){ sendCancelAlimtalk(); return; }
+  if(t.id==='btnCancelManage'){ document.getElementById('cancelReasonView').style.display='none'; document.getElementById('cancelManageView').style.display=''; renderCancelManage(); return; }
+  if(t.id==='btnCancelManageDone'){
+    // 저장
+    document.querySelectorAll('.cancel-manage-inp').forEach(function(inp,i){ if(inp.value.trim()) cancelReasons[i]=inp.value.trim(); });
+    saveCancelReasons();
+    document.getElementById('cancelManageView').style.display='none'; document.getElementById('cancelReasonView').style.display=''; renderCancelReasons(); return;
+  }
+  if(t.id==='btnCancelAddReason'){ cancelReasons.push('새 사유'); saveCancelReasons(); renderCancelManage(); return; }
+  if(t.dataset.manageDel!==undefined){ cancelReasons.splice(parseInt(t.dataset.manageDel),1); saveCancelReasons(); renderCancelManage(); return; }
+  if(t.id==='cancelOv'){ document.getElementById('cancelOv').classList.remove('open'); return; }
+  // 금액 모달
+  if(t.id==='btnAmountClose'||t.id==='btnAmountAbort'){ document.getElementById('amountOv').classList.remove('open'); return; }
+  if(t.id==='btnAmountSend'){
+    var amt=document.getElementById('amountInp').value.trim();
+    if(!amt||isNaN(amt)||parseInt(amt)<=0){ toast('금액을 입력하세요'); return; }
+    var oid=document.getElementById('amountOrderId').value;
+    document.getElementById('amountOv').classList.remove('open');
+    sendDeliveryReady(oid, parseInt(amt));
+    return;
+  }
+  if(t.id==='amountOv'){ document.getElementById('amountOv').classList.remove('open'); return; }
   var rb=t.closest('[data-restore]');
   if(rb){ restoreOrder(rb.dataset.restore); return; }
   var rn=t.closest('[data-restore-noshow]');
@@ -1171,6 +1456,12 @@ document.addEventListener('focusout',function(e){ if(e.target.classList.contains
 document.getElementById('sddUrlInp').addEventListener('keydown',function(e){ if(e.key==='Enter') sddConnect(); });
 
 function init(){
+  // 저장된 템플릿 ID 불러오기
+  var savedTmpl = JSON.parse(localStorage.getItem('tmpl1988')||'{}');
+  if(savedTmpl.cancel) TMPL.cancel = savedTmpl.cancel;
+  if(savedTmpl.deliveryReadyIaJa) TMPL.deliveryReadyIaJa = savedTmpl.deliveryReadyIaJa;
+  if(savedTmpl.deliveryReadySaGa) TMPL.deliveryReadySaGa = savedTmpl.deliveryReadySaGa;
+  updateStoreBadge();
   if(scriptUrl){ setSyncState('spin','동기화 중…'); fetchSheet(); startCD(); }
   renderAll();
   restartSoundTimer();
