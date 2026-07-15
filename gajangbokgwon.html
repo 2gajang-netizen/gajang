@@ -50,7 +50,7 @@ body{display:flex; align-items:center; justify-content:center;}
 /* 리빌 오버레이 */
 #reveal-overlay{position:absolute; inset:0; z-index:100; display:flex; align-items:center; justify-content:center; background:rgba(0,0,0,0); opacity:0; visibility:hidden; transition:background .4s ease,opacity .4s ease,visibility 0s linear .4s; pointer-events:none;}
 #reveal-overlay.active{pointer-events:auto; background:rgba(0,0,0,0.88); opacity:1; visibility:visible; transition:background .4s ease,opacity .4s ease,visibility 0s linear 0s;}
-.reveal-stage{position:relative; width:56vmin; height:76vmin; perspective:1400px;}
+.reveal-stage{position:relative; width:94vw; height:88vh; perspective:1400px;}
 .reveal-card{width:100%; height:100%; position:relative; transform-style:preserve-3d; --flip-rot:0deg; transform:rotateY(var(--flip-rot)); transition:transform .55s cubic-bezier(.45,.05,.18,1);}
 .reveal-face{position:absolute; inset:0; backface-visibility:hidden; border-radius:3vmin; display:flex; align-items:center; justify-content:center; flex-direction:column; box-shadow:0 3vmin 8vmin rgba(0,0,0,0.6);}
 .reveal-front{background:linear-gradient(160deg,#243530,#101a17 60%,#060a08); border:0.6vmin solid var(--brand-green);}
@@ -65,7 +65,7 @@ body{display:flex; align-items:center; justify-content:center;}
 @keyframes prismShift{0%{background-position:0% 50%;}100%{background-position:400% 50%;}}
 
 /* 미니 슬롯 (카드 뒷면 안의 릴) */
-.mini-slot-window{ width:90%; height:36vmin; overflow:hidden; border-radius:2vmin; position:relative;
+.mini-slot-window{ width:92%; height:52vh; overflow:hidden; border-radius:2vmin; position:relative;
   background:linear-gradient(160deg,#0e0b08,#050403); border:0.3vmin solid rgba(255,255,255,0.25); box-shadow:inset 0 0.6vmin 1.5vmin rgba(0,0,0,0.7);}
 .mini-slot-window::before,.mini-slot-window::after{content:""; position:absolute; left:0; right:0; height:34%; z-index:5; pointer-events:none;}
 .mini-slot-window::before{top:0; background:linear-gradient(180deg,rgba(0,0,0,0.85),rgba(0,0,0,0));}
@@ -73,10 +73,10 @@ body{display:flex; align-items:center; justify-content:center;}
 .mini-payline{position:absolute; top:50%; left:0; right:0; height:0.35vmin; transform:translateY(-50%); background:linear-gradient(90deg,transparent,var(--brand-orange),transparent); z-index:6; box-shadow:0 0 1.2vmin var(--brand-orange);}
 #mini-slot-strip{position:relative; width:100%;}
 .mini-slot-item{height:0; display:flex; align-items:center; justify-content:center; flex-direction:column;}
-.mini-slot-item img{width:60%; height:auto; max-width:15vmin; max-height:15vmin; object-fit:cover; border-radius:50%; border:0.3vmin solid rgba(255,255,255,0.6);}
-.mini-slot-item .msi-icon{font-size:10.5vmin;}
-.mini-slot-item .msi-name{font-size:1.9vmin; font-weight:800; text-align:center; padding:0 1.2vmin; line-height:1.2; word-break:keep-all; margin-top:0.6vmin;}
-.mini-slot-item .msi-value{font-size:1.6vmin; font-weight:700; color:#ffd36e; margin-top:0.15vmin;}
+.mini-slot-item img{width:60%; height:auto; max-width:22vmin; max-height:22vmin; object-fit:cover; border-radius:50%; border:0.4vmin solid rgba(255,255,255,0.6);}
+.mini-slot-item .msi-icon{font-size:15vmin;}
+.mini-slot-item .msi-name{font-size:2.6vmin; font-weight:800; text-align:center; padding:0 1.5vmin; line-height:1.25; word-break:keep-all; margin-top:0.9vmin;}
+.mini-slot-item .msi-value{font-size:2.2vmin; font-weight:700; color:#ffd36e; margin-top:0.2vmin;}
 
 .grade-name{font-size:3.3vmin; font-weight:900; letter-spacing:0.1vmin; line-height:1.25; padding:1vmin 1vmin 0 1vmin; text-align:center; word-break:keep-all; opacity:0; transition:opacity .3s ease;}
 .grade-name.show{opacity:1;}
@@ -183,6 +183,8 @@ body{display:flex; align-items:center; justify-content:center;}
         <div id="admin-panel" style="display:none;">
           <h3>📊 현재 설정된 확률표</h3>
           <div id="admin-probs"></div>
+          <div class="admin-sub">🎭 스핀 연출</div>
+          <div class="stock-row"><span>약올리기 연출은 뽑을 때마다 랜덤으로 결정됩니다</span></div>
           <h3>오늘의 당첨 통계</h3>
           <div id="admin-stats"></div>
           <div class="admin-sub">희귀등급 오늘 재고 상한</div>
@@ -289,6 +291,8 @@ function tone(freq, dur, type, gainVal, delay){
 }
 function sfxSpinTick(){ tone(200+Math.random()*80, 0.05, "square", 0.06); }
 function sfxTease(){ tone(500+Math.random()*200, 0.08, "triangle", 0.09); }
+function sfxBump(){ tone(180,0.1,"square",0.16); tone(110,0.16,"sine",0.13,0.05); }
+function sfxAlmost(){ tone(700,0.12,"triangle",0.1); tone(560,0.14,"triangle",0.08,0.06); }
 function sfxStop(cost){
   if(cost>=6){
     tone(523,0.4,"sine",0.24); tone(659,0.4,"sine",0.22,0.08); tone(784,0.55,"sine",0.24,0.16); tone(988,0.75,"triangle",0.26,0.28);
@@ -436,19 +440,29 @@ function runReveal(grade){
 function spinToResult(grade, card, blackout){
   const strip = document.getElementById("mini-slot-strip");
   const win = document.getElementById("mini-slot-window");
+  const teaserMode = Math.random() < 0.5; // 뽑을 때마다 랜덤하게 둘 중 하나로 결정
 
-  // 필러 심볼 (창이 커진 만큼 초반 빠른 스핀 구간도 늘림)
-  const fillerCount = 14;
   const items = [];
-  for(let i=0;i<fillerCount;i++) items.push(GRADES[Math.floor(Math.random()*GRADES.length)]);
 
-  // ===== 애간장 태우는 구간: 결과 직전에 고가 등급들을 확실히, 여러 개 배치 =====
-  const teaseCandidates = GRADES.filter(g=>g.cost>=4);
-  const teaseLen = 5 + Math.floor(Math.random()*3); // 5~7개, 확실하게 여러 번 애태움
-  for(let i=0;i<teaseLen;i++){
+  if(teaserMode){
+    // ===== 티저(약올리기) 버전 =====
+    const fillerCount = 14;
+    for(let i=0;i<fillerCount;i++) items.push(GRADES[Math.floor(Math.random()*GRADES.length)]);
+
+    // 애간장 태우는 구간: 결과 직전에 고가 등급들을 확실히, 여러 개 배치
+    const teaseCandidates = GRADES.filter(g=>g.cost>=4);
+    const teaseLen = 5 + Math.floor(Math.random()*3); // 5~7개, 확실하게 여러 번 애태움
+    for(let i=0;i<teaseLen;i++){
+      items.push(teaseCandidates[Math.floor(Math.random()*teaseCandidates.length)]);
+    }
+    // 막판 약올리기: 결과 바로 앞자리에 탐나는 고가 등급 배치 (완전히 멈추진 않고 슬로우모션으로 지나감)
     items.push(teaseCandidates[Math.floor(Math.random()*teaseCandidates.length)]);
+  } else {
+    // ===== 담백(논-티저) 버전: 짧게 스핀하고 바로 결과 =====
+    const plainFillerCount = 8;
+    for(let i=0;i<plainFillerCount;i++) items.push(GRADES[Math.floor(Math.random()*GRADES.length)]);
   }
-  items.push(grade); // 진짜 결과는 맨 마지막
+  items.push(grade); // 진짜 결과는 항상 맨 마지막
 
   let html = "";
   items.forEach(g=>{ html += miniItemHTML(g); });
@@ -461,28 +475,38 @@ function spinToResult(grade, card, blackout){
   void strip.offsetWidth;
 
   const targetY = -(items.length-1) * winHeight;
-  const fastY = -(fillerCount) * winHeight; // 러닝 구간이 끝나는 지점(필러 끝, 애간장 구간 시작 직전)
 
-  const fastDur = 4500 + grade.cost*250;   // 러닝(빠른 스핀) 구간 - 더 길게(+2초)
-  const decelDur = 1200 + grade.cost*300;  // 감속→정지 구간 - 더 짧게(-2초), 애간장 구간은 여기 포함
+  if(!teaserMode){
+    // 담백 버전: 짧고 깔끔하게, 애태우는 구간 없이 바로 착지
+    const spinDur = 1300 + grade.cost*130;
+    let tick = setInterval(sfxSpinTick, 55);
+    requestAnimationFrame(()=>{
+      strip.style.transition = "transform "+spinDur+"ms cubic-bezier(.15,.75,.2,1)";
+      strip.style.transform = "translateY("+targetY+"px)";
+    });
+    setTimeout(()=>{ clearInterval(tick); finalizeReveal(grade, card, blackout); }, spinDur+60);
+    return;
+  }
+
+  // ===== 여기부터 티저 버전 로직 =====
+  const fastDur = 4500 + grade.cost*250;   // 러닝(빠른 스핀) 체감 구간
+  const decelDur = 1200 + grade.cost*300;  // 감속→정지 체감 구간
+  const spinDur = fastDur + decelDur;      // 하나의 연속된 곡선으로 애니메이션 (완전정지 없이 쭉 흘러서 착지 - "땄다 뺏기는" 느낌 방지)
 
   let tickTimer = setInterval(sfxSpinTick, 65);
-
-  // 1단계: 등속 러닝 구간
-  requestAnimationFrame(()=>{
-    strip.style.transition = "transform "+fastDur+"ms linear";
-    strip.style.transform = "translateY("+fastY+"px)";
-  });
-
-  // 2단계: 감속하며 애간장 태우는 구간을 지나 결과에 착지
   setTimeout(()=>{
     clearInterval(tickTimer);
     tickTimer = setInterval(sfxTease, 150);
-    strip.style.transition = "transform "+decelDur+"ms cubic-bezier(.12,.7,.15,1)";
-    strip.style.transform = "translateY("+targetY+"px)";
   }, fastDur);
+  // 탐나는 아이템(약올리는 자리) 근처를 지날 때 "어? 저거인가?" 하는 톤만 살짝 얹음 (멈추지는 않음)
+  setTimeout(sfxAlmost, spinDur*0.94);
 
-  const spinDur = fastDur + decelDur;
+  requestAnimationFrame(()=>{
+    // 오래 빠르게 달리다가 막판에 확 늘어지며 감속 - 탐나는 아이템이 슬로우모션으로 지나가되
+    // 완전히 멈추지 않고 그대로 흘러서 진짜 결과에 착지함 (중간에 뺏어가는 느낌이 없음)
+    strip.style.transition = "transform "+spinDur+"ms cubic-bezier(.32,.66,.08,1)";
+    strip.style.transform = "translateY("+targetY+"px)";
+  });
 
   setTimeout(()=>{
     clearInterval(tickTimer);
@@ -508,13 +532,19 @@ function finalizeReveal(grade, card, blackout){
       setTimeout(()=>card.classList.add("crown-active"), 150);
       doGold();
       sfxStop(6);
-      if(navigator.vibrate) navigator.vibrate([50,30,50,30,150,80,150]);
-      addConfetti(500, true);
-      setTimeout(()=>addConfetti(320, true), 260);
-      setTimeout(()=>addConfetti(220, true), 600);
+      if(navigator.vibrate) navigator.vibrate([60,30,60,30,60,30,180,100,180,100,220]);
+      addConfetti(650, true);
+      setTimeout(()=>addConfetti(480, true), 260);
+      setTimeout(()=>addConfetti(380, true), 600);
+      setTimeout(()=>addConfetti(280, true), 1000);
+      setTimeout(()=>addConfetti(180, true), 1450);
       document.getElementById("app").classList.add("screen-shake-big");
       setTimeout(()=>document.getElementById("app").classList.remove("screen-shake-big"), 800);
-      setTimeout(()=>afterReveal(grade), 1900);
+      setTimeout(()=>{
+        document.getElementById("app").classList.add("screen-shake-big");
+        setTimeout(()=>document.getElementById("app").classList.remove("screen-shake-big"), 800);
+      }, 1100);
+      setTimeout(()=>afterReveal(grade), 2600);
     }, 380);
   } else {
     document.getElementById("rb-name").textContent = grade.name;
@@ -523,12 +553,14 @@ function finalizeReveal(grade, card, blackout){
     document.getElementById("rb-value").classList.add("show");
     sfxStop(grade.cost);
     const gold = grade.cost>=4;
-    addConfetti(260 + grade.cost*70, gold);
-    if(gold) setTimeout(()=>addConfetti(160, true), 250);
-    if(navigator.vibrate) navigator.vibrate(gold ? [40,30,80,30,60] : [40,30,60]);
+    addConfetti(360 + grade.cost*90, gold);
+    setTimeout(()=>addConfetti(220 + grade.cost*50, gold), 260);
+    setTimeout(()=>addConfetti(140 + grade.cost*30, gold), 600);
+    if(gold) setTimeout(()=>addConfetti(100, true), 1000);
+    if(navigator.vibrate) navigator.vibrate(gold ? [45,30,85,30,75,30,60] : [40,30,70,30,50]);
     document.getElementById("app").classList.add(gold ? "screen-shake-big" : "screen-shake");
     setTimeout(()=>document.getElementById("app").classList.remove(gold ? "screen-shake-big" : "screen-shake"), gold?800:500);
-    setTimeout(()=>afterReveal(grade), 1300);
+    setTimeout(()=>afterReveal(grade), gold?2000:1600);
   }
 }
 
