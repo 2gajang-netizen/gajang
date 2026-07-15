@@ -285,6 +285,8 @@ body{display:flex; align-items:center; justify-content:center;}
           </div>
         </div>
         <div id="admin-panel" style="display:none;">
+          <h3>📊 현재 설정된 확률표</h3>
+          <div id="admin-probs"></div>
           <h3>오늘의 당첨 통계</h3>
           <div id="admin-stats"></div>
           <div class="admin-sub">🎬 이펙트 미리보기</div>
@@ -968,6 +970,24 @@ document.getElementById("admin-login-btn").addEventListener("click", ()=>{
   }
 });
 function renderAdminPanel(){
+  const probBox = document.getElementById("admin-probs");
+  probBox.innerHTML = "";
+  let probSum = 0;
+  GRADES.forEach(g=>{
+    probSum += g.prob;
+    const row = document.createElement("div");
+    row.className = "admin-row";
+    row.innerHTML = "<span>"+g.icon+" "+g.name+"</span><b>"+g.prob+"%</b>";
+    probBox.appendChild(row);
+  });
+  const sumRow = document.createElement("div");
+  sumRow.className = "admin-row";
+  sumRow.style.borderTop = "1px dashed rgba(255,255,255,0.25)";
+  sumRow.style.marginTop = "0.6vmin";
+  sumRow.style.paddingTop = "0.8vmin";
+  sumRow.innerHTML = "<span>합계</span><b style=\"color:"+(Math.abs(probSum-100)<0.01?"#7CFFB2":"#ff6b6b")+"\">"+probSum.toFixed(2)+"%</b>";
+  probBox.appendChild(sumRow);
+
   const box = document.getElementById("admin-stats");
   box.innerHTML = "";
   GRADES.forEach(g=>{
