@@ -205,6 +205,8 @@ body{display:flex; align-items:center; justify-content:center;}
           <div class="admin-sub">🎭 스핀 연출</div>
           <div class="stock-row"><span>약올리기 연출은 뽑을 때마다 랜덤으로 결정됩니다</span></div>
           <div class="admin-actions"><button class="btn-confirm" id="test-upgrade-btn">🎬 업그레이드 엔딩 강제 테스트</button></div>
+          <div class="admin-sub">🎬 등급별 이펙트 미리보기</div>
+          <div class="admin-actions" id="preview-btns"></div>
           <h3>오늘의 당첨 통계</h3>
           <div id="admin-stats"></div>
           <div class="admin-actions">
@@ -673,6 +675,22 @@ function renderAdminPanel(){
     row.className = "admin-row";
     row.innerHTML = "<span>"+g.icon+" "+g.name+"</span><b>"+(stats[g.key]||0)+"명</b>";
     box.appendChild(row);
+  });
+
+  const pbox = document.getElementById("preview-btns");
+  pbox.innerHTML = "";
+  GRADES.forEach(g=>{
+    const btn = document.createElement("button");
+    btn.textContent = g.icon+" "+g.name;
+    btn.style.background = "#333"; btn.style.color = "#fff";
+    btn.addEventListener("click", async ()=>{
+      await unlockAudio();
+      closeAdmin();
+      buildCards();
+      showScreen("card");
+      runReveal(g);
+    });
+    pbox.appendChild(btn);
   });
 }
 document.getElementById("test-upgrade-btn").addEventListener("click", async ()=>{
