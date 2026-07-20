@@ -310,6 +310,47 @@ header{background:var(--green);height:50px;padding:0 12px;display:flex;align-ite
 .list-empty{text-align:center;padding:50px 20px;color:var(--lite)}
 .list-empty .ico{font-size:38px;margin-bottom:6px}
 .list-empty .t{font-size:13px;font-weight:700;color:var(--mid)}
+/* 재고 카운터 */
+.stock-panel{display:none;position:fixed;top:60px;right:16px;z-index:500;background:var(--paper);border-radius:14px;width:340px;max-height:80vh;overflow-y:auto;box-shadow:0 8px 32px rgba(0,0,0,.22);border:2px solid var(--border)}
+.stock-panel.open{display:block}
+.stock-modal{padding:14px}
+.stock-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;border-bottom:2px solid var(--border);padding-bottom:8px}
+.stock-title{font-family:'Black Han Sans',sans-serif;font-size:16px;color:var(--green)}
+.stock-header-btns{display:flex;gap:6px;align-items:center}
+.stock-add-btn{padding:5px 10px;border:none;border-radius:6px;background:var(--green);color:#fff;font-family:'Noto Sans KR',sans-serif;font-size:11px;font-weight:700;cursor:pointer}
+.stock-reset-btn{padding:5px 10px;border:1.5px solid var(--border);border-radius:6px;background:#fff;color:var(--mid);font-family:'Noto Sans KR',sans-serif;font-size:11px;font-weight:700;cursor:pointer}
+.stock-item{background:#fff;border:2px solid var(--border);border-radius:10px;padding:12px;margin-bottom:10px;position:relative}
+.stock-item.over{border-color:#E74C3C;background:#FEF0ED}
+.stock-item.done{border-color:var(--green);background:#F0FAF0}
+.stock-item-header{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.stock-name{font-size:14px;font-weight:700;color:var(--char);flex:1}
+.stock-name-inp{font-size:14px;font-weight:700;color:var(--char);flex:1;border:none;border-bottom:2px solid var(--green);background:transparent;font-family:'Noto Sans KR',sans-serif;outline:none}
+.stock-del-btn{padding:2px 7px;border:1.5px solid #F5B7B1;border-radius:4px;background:#fff;color:#C0392B;font-family:'Noto Sans KR',sans-serif;font-size:10px;font-weight:700;cursor:pointer}
+.stock-counts{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.stock-num{font-family:'Black Han Sans',sans-serif;font-size:28px;cursor:pointer;padding:2px 6px;border-radius:6px;transition:background .15s}
+.stock-num:hover{background:var(--cream)}
+.stock-num.current{color:var(--green)}
+.stock-num.over{color:#E74C3C}
+.stock-sep{font-size:20px;color:var(--lite);font-weight:700}
+.stock-num.total{color:var(--mid)}
+.stock-num-inp{font-family:'Black Han Sans',sans-serif;font-size:28px;width:70px;text-align:center;border:2px solid var(--green);border-radius:6px;outline:none;background:#fff;color:var(--green)}
+.stock-pct{font-size:11px;font-weight:700;color:var(--lite);margin-left:auto}
+.stock-btns{display:flex;gap:5px;flex-wrap:wrap}
+.stock-btn{padding:6px 12px;border-radius:6px;border:1.5px solid var(--border);background:#fff;color:var(--char);font-family:'Noto Sans KR',sans-serif;font-size:12px;font-weight:700;cursor:pointer;transition:all .12s}
+.stock-btn.plus:hover{background:var(--green);color:#fff;border-color:var(--green)}
+.stock-btn.minus:hover{background:#E74C3C;color:#fff;border-color:#E74C3C}
+.stock-bar{height:6px;background:var(--border);border-radius:3px;overflow:hidden;margin-bottom:10px}
+.stock-bar-fill{height:100%;background:var(--green);border-radius:3px;transition:width .3s}
+.stock-bar-fill.over{background:#E74C3C}
+.stock-empty{text-align:center;padding:30px;color:var(--lite);font-size:13px}
+.stock-add-form{background:var(--cream);border:2px dashed var(--border);border-radius:10px;padding:12px;margin-bottom:10px}
+.stock-add-form-row{display:flex;gap:8px;align-items:center}
+.stock-add-name{flex:1;padding:7px 10px;border:2px solid var(--border);border-radius:6px;font-family:'Noto Sans KR',sans-serif;font-size:12px;background:#fff}
+.stock-add-name:focus{outline:none;border-color:var(--green)}
+.stock-add-total{width:70px;padding:7px 10px;border:2px solid var(--border);border-radius:6px;font-family:'Noto Sans KR',sans-serif;font-size:12px;background:#fff;text-align:center}
+.stock-add-total:focus{outline:none;border-color:var(--green)}
+.stock-add-ok{padding:7px 12px;border:none;border-radius:6px;background:var(--green);color:#fff;font-family:'Noto Sans KR',sans-serif;font-size:12px;font-weight:700;cursor:pointer}
+
 /* 매장 토글 */
 .store-toggle{display:flex;gap:6px;margin-bottom:12px}
 .store-btn{flex:1;padding:10px;border:2px solid var(--border);border-radius:8px;font-family:'Noto Sans KR',sans-serif;font-size:13px;font-weight:700;cursor:pointer;background:#fff;color:var(--mid);text-align:center}
@@ -351,7 +392,7 @@ header{background:var(--green);height:50px;padding:0 12px;display:flex;align-ite
     <span class="store-badge iaja" id="storeBadgeHdr">이아자점</span><button class="sync-badge" id="btnSync"><div class="dot" id="syncDot"></div><span id="syncTxt">미연결</span></button>
     <button class="btn-hdr" style="background:#FEE500;color:#3A1D1D" id="btnAlimSetting">📱 문자설정</button>
     <button class="btn-hdr" style="background:#FF6B35;color:#fff" id="btnAlertSetting">🔔 알림설정</button>
-    <button class="btn-hdr white" id="btnOpenAdd">＋ 주문추가</button>
+    <button class="btn-hdr" style="background:#8E44AD;color:#fff" id="btnStock">📦 재고</button><button class="btn-hdr white" id="btnOpenAdd">＋ 주문추가</button>
   </div>
 </header>
 
@@ -620,6 +661,31 @@ K:주문확인  L:준비완료  M:수령완료</div></div></div></div>
       <button class="bcx" id="btnAmountAbort">취소</button>
       <button class="bok" id="btnAmountSend">준비완료 발송 🥩</button>
     </div>
+  </div>
+</div>
+
+<!-- 재고 카운터 플로팅 패널 -->
+<div class="stock-panel" id="stockOv">
+  <div class="stock-modal">
+    <div class="stock-header" id="stockDragHandle" style="cursor:grab;user-select:none">
+      <div class="stock-title">📦 재고 카운터 <span style="font-size:10px;color:var(--lite);font-weight:400">✥ 드래그</span></div>
+      <div class="stock-header-btns">
+        <button class="stock-reset-btn" id="btnStockResetAll">전체 리셋</button>
+        <button class="stock-add-btn" id="btnStockAdd">＋ 항목추가</button>
+        <button class="modal-close" id="btnStockClose">✕</button>
+      </div>
+    </div>
+    <div id="stockAddForm" style="display:none">
+      <div class="stock-add-form">
+        <div style="font-size:11px;font-weight:700;color:var(--mid);margin-bottom:8px">새 항목 추가</div>
+        <div class="stock-add-form-row">
+          <input type="text" class="stock-add-name" id="stockAddName" placeholder="품목명 (예: 된장찌개)">
+          <input type="number" class="stock-add-total" id="stockAddTotal" placeholder="수량" min="1">
+          <button class="stock-add-ok" id="btnStockAddOk">추가</button>
+        </div>
+      </div>
+    </div>
+    <div id="stockList"></div>
   </div>
 </div>
 <div class="toast" id="toast"></div>
@@ -1240,6 +1306,153 @@ function updateStoreBadge(){
   }
 }
 
+
+// ── 재고 카운터 ──
+var stockItems = JSON.parse(localStorage.getItem('stock1988') || '[]');
+function saveStock(){ localStorage.setItem('stock1988', JSON.stringify(stockItems)); }
+
+function openStockModal(){
+  var panel=document.getElementById('stockOv');
+  if(panel.classList.contains('open')){ panel.classList.remove('open'); return; }
+  document.getElementById('stockAddForm').style.display='none';
+  document.getElementById('stockAddName').value='';
+  document.getElementById('stockAddTotal').value='';
+  renderStockList();
+  panel.classList.add('open');
+  initStockDrag();
+}
+
+function initStockDrag(){
+  var panel=document.getElementById('stockOv');
+  var handle=document.getElementById('stockDragHandle');
+  var isDragging=false, startX, startY, startLeft, startTop;
+  // 초기 위치 설정
+  if(!panel.style.left){ panel.style.top='60px'; panel.style.right='16px'; }
+  handle.onmousedown=function(e){
+    isDragging=true;
+    var rect=panel.getBoundingClientRect();
+    startX=e.clientX; startY=e.clientY;
+    startLeft=rect.left; startTop=rect.top;
+    panel.style.right='auto'; panel.style.left=startLeft+'px'; panel.style.top=startTop+'px';
+    handle.style.cursor='grabbing';
+    e.preventDefault();
+  };
+  document.onmousemove=function(e){
+    if(!isDragging) return;
+    var dx=e.clientX-startX, dy=e.clientY-startY;
+    var newLeft=startLeft+dx, newTop=startTop+dy;
+    newLeft=Math.max(0,Math.min(window.innerWidth-panel.offsetWidth,newLeft));
+    newTop=Math.max(0,Math.min(window.innerHeight-60,newTop));
+    panel.style.left=newLeft+'px'; panel.style.top=newTop+'px';
+  };
+  document.onmouseup=function(){
+    if(isDragging){ isDragging=false; handle.style.cursor='grab'; }
+  };
+  // 터치 지원
+  handle.ontouchstart=function(e){
+    var t=e.touches[0];
+    isDragging=true;
+    var rect=panel.getBoundingClientRect();
+    startX=t.clientX; startY=t.clientY;
+    startLeft=rect.left; startTop=rect.top;
+    panel.style.right='auto'; panel.style.left=startLeft+'px'; panel.style.top=startTop+'px';
+    e.preventDefault();
+  };
+  handle.ontouchmove=function(e){
+    if(!isDragging) return;
+    var t=e.touches[0];
+    var dx=t.clientX-startX, dy=t.clientY-startY;
+    panel.style.left=Math.max(0,startLeft+dx)+'px';
+    panel.style.top=Math.max(0,startTop+dy)+'px';
+    e.preventDefault();
+  };
+  handle.ontouchend=function(){ isDragging=false; };
+}
+
+function renderStockList(){
+  var el=document.getElementById('stockList');
+  if(!stockItems.length){
+    el.innerHTML='<div class="stock-empty">📦 항목을 추가해보세요!</div>'; return;
+  }
+  el.innerHTML=stockItems.map(function(item,i){
+    var pct=item.total>0?Math.min(100,Math.round(item.current/item.total*100)):0;
+    var over=item.current>item.total;
+    var done=item.current===item.total;
+    return '<div class="stock-item'+(over?' over':done?' done':'')+'" id="si-'+i+'">'
+      +'<div class="stock-item-header">'
+      +'<span class="stock-name" onclick="editStockName('+i+')" title="클릭하여 이름 수정">'+item.name+'</span>'
+      +'<button class="stock-del-btn" data-stock-del="'+i+'">삭제</button>'
+      +'</div>'
+      +'<div class="stock-counts">'
+      +'<span class="stock-num current'+(over?' over':'')+'" onclick="editStockCurrent('+i+')" title="클릭하여 직접입력">'+item.current+'</span>'
+      +'<span class="stock-sep">/</span>'
+      +'<span class="stock-num total" onclick="editStockTotal('+i+')" title="클릭하여 수량수정">'+item.total+'</span>'
+      +'<span class="stock-pct">'+pct+'%'+(over?' ⚠️ 초과!':done?' ✅ 완료':'')+'</span>'
+      +'</div>'
+      +'<div class="stock-bar"><div class="stock-bar-fill'+(over?' over':'')+'" style="width:'+pct+'%"></div></div>'
+      +'<div class="stock-btns">'
+      +'<button class="stock-btn plus" data-si="'+i+'" data-sd="1">+1</button>'
+      +'<button class="stock-btn plus" data-si="'+i+'" data-sd="2">+2</button>'
+      +'<button class="stock-btn plus" data-si="'+i+'" data-sd="3">+3</button>'
+      +'<button class="stock-btn plus" data-si="'+i+'" data-sd="5">+5</button>'
+      +'<button class="stock-btn minus" data-si="'+i+'" data-sd="-1">-1</button>'
+      +'<button class="stock-btn minus" data-si="'+i+'" data-sd="-2">-2</button>'
+      +'<button class="stock-btn" data-stock-reset="'+i+'" style="margin-left:auto;border-color:#AED6F1;color:var(--blue)">리셋</button>'
+      +'</div>'
+      +'</div>';
+  }).join('');
+}
+
+function editStockName(i){
+  var item=stockItems[i];
+  var el=document.querySelector('#si-'+i+' .stock-name');
+  if(!el) return;
+  var inp=document.createElement('input');
+  inp.className='stock-name-inp'; inp.value=item.name;
+  el.parentNode.replaceChild(inp,el);
+  inp.focus(); inp.select();
+  inp.addEventListener('blur',function(){ item.name=inp.value.trim()||item.name; saveStock(); renderStockList(); });
+  inp.addEventListener('keydown',function(e){ if(e.key==='Enter') inp.blur(); });
+}
+
+function editStockCurrent(i){
+  var item=stockItems[i];
+  var el=document.querySelector('#si-'+i+' .stock-num.current');
+  if(!el) return;
+  var inp=document.createElement('input');
+  inp.type='number'; inp.className='stock-num-inp'; inp.value=item.current;
+  el.parentNode.replaceChild(inp,el);
+  inp.focus(); inp.select();
+  inp.addEventListener('blur',function(){ var v=parseInt(inp.value); if(!isNaN(v)&&v>=0) item.current=v; saveStock(); renderStockList(); });
+  inp.addEventListener('keydown',function(e){ if(e.key==='Enter') inp.blur(); });
+}
+
+function editStockTotal(i){
+  var item=stockItems[i];
+  var el=document.querySelector('#si-'+i+' .stock-num.total');
+  if(!el) return;
+  var inp=document.createElement('input');
+  inp.type='number'; inp.className='stock-num-inp'; inp.value=item.total;
+  el.parentNode.replaceChild(inp,el);
+  inp.focus(); inp.select();
+  inp.addEventListener('blur',function(){ var v=parseInt(inp.value); if(!isNaN(v)&&v>0) item.total=v; saveStock(); renderStockList(); });
+  inp.addEventListener('keydown',function(e){ if(e.key==='Enter') inp.blur(); });
+}
+
+function addStockItem(){
+  var name=document.getElementById('stockAddName').value.trim();
+  var total=parseInt(document.getElementById('stockAddTotal').value);
+  if(!name){ toast('품목명을 입력하세요'); return; }
+  if(!total||total<=0){ toast('수량을 입력하세요'); return; }
+  stockItems.push({name:name,current:0,total:total});
+  saveStock();
+  document.getElementById('stockAddName').value='';
+  document.getElementById('stockAddTotal').value='';
+  document.getElementById('stockAddForm').style.display='none';
+  renderStockList();
+  toast('📦 '+name+' 추가됐어요!');
+}
+
 // ── 취소 안내 ──
 var _cancelOrderId = null;
 var _cancelSelectedReason = null;
@@ -1363,6 +1576,14 @@ document.addEventListener('click',function(e){
   if(t.id==='btnAlertSetting'){ openAlertModal(); return; }
   if(t.id==='btnAlertClose'){ closeAlertModal(); return; }
   if(t.id==='btnAlertSave'){ saveAlertModal(); return; }
+  if(t.id==='btnStock'){ openStockModal(); return; }
+  if(t.id==='btnStockClose'){ document.getElementById('stockOv').classList.remove('open'); return; }
+  if(t.id==='btnStockAdd'){ var f=document.getElementById('stockAddForm'); f.style.display=f.style.display==='none'?'':'none'; if(f.style.display!=='none') document.getElementById('stockAddName').focus(); return; }
+  if(t.id==='btnStockAddOk'){ addStockItem(); return; }
+  if(t.id==='btnStockResetAll'){ if(confirm('모든 항목의 카운트를 0으로 리셋합니다.')) { stockItems.forEach(function(x){ x.current=0; }); saveStock(); renderStockList(); toast('전체 리셋 완료'); } return; }
+  if(t.dataset.stockDel!==undefined){ stockItems.splice(parseInt(t.dataset.stockDel),1); saveStock(); renderStockList(); return; }
+  if(t.dataset.stockReset!==undefined){ stockItems[parseInt(t.dataset.stockReset)].current=0; saveStock(); renderStockList(); return; }
+  if(t.dataset.si!==undefined&&t.dataset.sd!==undefined){ var idx=parseInt(t.dataset.si),d=parseInt(t.dataset.sd); stockItems[idx].current=Math.max(0,stockItems[idx].current+d); saveStock(); renderStockList(); return; }
   if(t.id==='btnOpenAdd'){ openAddModal(); return; }
   if(t.id==='btnConnect'){ saveUrl(); return; }
   if(t.id==='btnGuide'||t.id==='sddBtnGuide'){ closeSyncDd(); document.getElementById('govEl').classList.add('open'); return; }
